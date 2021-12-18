@@ -20,63 +20,67 @@ public class Missiles : MonoBehaviour
 
 	public static Missiles Instance;
 
-	void Awake ()
+	void Awake()
 	{
 		Instance = this;
 	}
 
 	#endregion
 
-	void Start ()
+	void Start()
 	{
-		PrepareMissiles ();
+		PrepareMissiles();
 	}
 
-	void Update ()
+	void Update()
 	{
 		t += Time.deltaTime;
-		if (t >= delay) {
+		if (t >= delay)
+		{
 			t = 0f;
-			g = SpawnMissile (transform.position);
+			g = SpawnMissile(transform.position);
 			if (g != null)
-				g.GetComponent <Rigidbody2D> ().velocity = Vector2.up * speed;
+				g.GetComponent<Rigidbody2D>().velocity = Vector2.up * speed;
 		}
 	}
 
-	void PrepareMissiles ()
+	void PrepareMissiles()
 	{
-		missilesQueue = new Queue<GameObject> ();
-		for (int i = 0; i < missilesCount; i++) {
-			g = Instantiate (missilePrefab, transform.position, Quaternion.identity, transform);
-			g.SetActive (false);
-			missilesQueue.Enqueue (g);
+		missilesQueue = new Queue<GameObject>();
+		for (int i = 0; i < missilesCount; i++)
+		{
+			g = Instantiate(missilePrefab, transform.position, Quaternion.identity, transform);
+			g.SetActive(false);
+			missilesQueue.Enqueue(g);
 		}
 	}
 
-	public GameObject SpawnMissile (Vector2 position)
+	public GameObject SpawnMissile(Vector2 position)
 	{
-		if (missilesQueue.Count > 0) {
-			g = missilesQueue.Dequeue ();
+		if (missilesQueue.Count > 0)
+		{
+			g = missilesQueue.Dequeue();
 			g.transform.position = position;
-			g.SetActive (true);
+			g.SetActive(true);
 			return g;
 		}
 
 		return null;
 	}
 
-	public void DestroyMissile (GameObject missile)
+	public void DestroyMissile(GameObject missile)
 	{
-		missilesQueue.Enqueue (missile);
-		missile.SetActive (false);
+		missilesQueue.Enqueue(missile);
+		missile.SetActive(false);
 	}
 
 
 	//missile collision with top collider
-	void OnTriggerEnter2D (Collider2D other)
+	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag.Equals ("missile")) {
-			DestroyMissile (other.gameObject);
+		if (other.tag.Equals("missile"))
+		{
+			DestroyMissile(other.gameObject);
 		}
 	}
 }
